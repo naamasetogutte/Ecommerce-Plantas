@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato | Verde Urbano</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <h1 class="logo">🌿 Verde Urbano</h1>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="/index.html">Início</a></li>
+                    <li><a href="/catalogo.html">Catálogo de Plantas</a></li>
+                    <li><a href="/servicos.html">Telhados Verdes</a></li>
+                    <li><a href="/contato.html">Contato</a></li>
+                    <li><a href="/cart.html" id="cartLink">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="max-width: 800px; margin: 60px auto;">
+        <h2 style="text-align:center; margin-bottom: 40px;">Entre em Contato</h2>
+        <div style="display: flex; flex-direction: column; gap: 30px;">
+
+            <div style="display: flex; align-items: center;">
+                <span class="material-icons" style="font-size: 32px; color: #2e7d32; margin-right: 15px;">email</span>
+                <div>
+                    <strong>Email:</strong><br>
+                    <a href="mailto:contato@verdeurbano.com" style="color:#388e3c;">contato@verdeurbano.com</a>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center;">
+                <span class="material-icons" style="font-size: 32px; color: #2e7d32; margin-right: 15px;">phone</span>
+                <div>
+                    <strong>Telefone / WhatsApp:</strong><br>
+                    <a href="tel:+5521999999999" style="color:#388e3c;">(21) 99999-9999</a>
+                </div>
+            </div>
+
+            <div style="display: flex; align-items: center;">
+                <span class="material-icons" style="font-size: 32px; color: #2e7d32; margin-right: 15px;">location_on</span>
+                <div>
+                    <strong>Endereço:</strong><br>
+                    Rua das Palmeiras Nativas, 123 - Bairro Sustentável<br>
+                    Rio de Janeiro - RJ, Brasil
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Verde Urbano. Todos os direitos reservados.</p>
+            <p>🌍 Apoio ao ODS 11 - Cidades e Comunidades Sustentáveis</p>
+        </div>
+    </footer>
+
+    <script src="/js/services.js"></script>
+    <script>
+        function updateCartCount() {
+            const cart = cartService.getCart();
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
+</body>
+</html> 

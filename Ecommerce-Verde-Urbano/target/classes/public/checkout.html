@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Finalizar Compra</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    .checkout-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .checkout-step {
+      margin-bottom: 30px;
+      border: 1px solid #eee;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .checkout-step h3 {
+      margin-top: 0;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="tel"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .btn-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .cart-summary-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      border-bottom: 1px dashed #eee;
+    }
+    .cart-summary-total {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: right;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <h1 class="logo">🌿 Verde Urbano</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a href="/index.html">Início</a></li>
+          <li><a href="/catalogo.html">Catálogo de Plantas</a></li>
+          <li><a href="/servicos.html">Telhados Verdes</a></li>
+          <li><a href="/contato.html">Contato</a></li>
+          <li><a href="/cart.html" id="cartLink">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="catalogo-titulo">Finalizar Compra</h2>
+    <div class="checkout-container">
+      <div id="step1" class="checkout-step">
+        <h3>1. Endereço de Entrega</h3>
+        <div class="form-group">
+          <label for="fullName">Nome Completo:</label>
+          <input type="text" id="fullName" name="fullName" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="address">Endereço:</label>
+          <input type="text" id="address" name="address" required>
+        </div>
+        <div class="form-group">
+          <label for="city">Cidade:</label>
+          <input type="text" id="city" name="city" required>
+        </div>
+        <div class="form-group">
+          <label for="state">Estado:</label>
+          <input type="text" id="state" name="state" required>
+        </div>
+        <div class="form-group">
+          <label for="zipCode">CEP:</label>
+          <input type="text" id="zipCode" name="zipCode" required>
+        </div>
+        <div class="btn-group">
+          <button class="btn-primary" id="nextToPayment">Próximo</button>
+        </div>
+      </div>
+
+      <div id="step2" class="checkout-step hidden">
+        <h3>2. Pagamento</h3>
+        <div class="form-group">
+          <label for="cardNumber">Número do Cartão:</label>
+          <input type="text" id="cardNumber" name="cardNumber" required>
+        </div>
+        <div class="form-group">
+          <label for="cardName">Nome no Cartão:</label>
+          <input type="text" id="cardName" name="cardName" required>
+        </div>
+        <div class="form-group">
+          <label for="expiryDate">Data de Expiração (MM/AA):</label>
+          <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/AA" required>
+        </div>
+        <div class="form-group">
+          <label for="cvv">CVV:</label>
+          <input type="text" id="cvv" name="cvv" required>
+        </div>
+        <div class="btn-group">
+          <button class="btn-secondary" id="backToAddress">Voltar</button>
+          <button class="btn-primary" id="nextToConfirm">Próximo</button>
+        </div>
+      </div>
+
+      <div id="step3" class="checkout-step hidden">
+        <h3>3. Confirmação do Pedido</h3>
+        <div id="orderSummary">
+        </div>
+        <p class="cart-summary-total" id="finalTotal"></p>
+        <div class="form-group">
+          <input type="checkbox" id="confirmCheckbox" required>
+          <label for="confirmCheckbox">Eu confirmo que todas as informações estão corretas.</label>
+        </div>
+        <div class="btn-group">
+          <button class="btn-secondary" id="backToPayment">Voltar</button>
+          <button class="btn-primary" id="placeOrder">Finalizar Pedido</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Verde Urbano. Todos os direitos reservados.</p>
+      <p>🌍 Apoio ao ODS 11 - Cidades e Comunidades Sustentáveis</p>
+    </div>
+  </footer>
+
+  <script src="/js/services.js"></script>
+  <script>
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cartCount').textContent = count;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartCount();
+
+      const step1 = document.getElementById('step1');
+      const step2 = document.getElementById('step2');
+      const step3 = document.getElementById('step3');
+
+      const nextToPaymentBtn = document.getElementById('nextToPayment');
+      const backToAddressBtn = document.getElementById('backToAddress');
+      const nextToConfirmBtn = document.getElementById('nextToConfirm');
+      const backToPaymentBtn = document.getElementById('backToPayment');
+      const placeOrderBtn = document.getElementById('placeOrder');
+      const confirmCheckbox = document.getElementById('confirmCheckbox');
+
+      let currentStep = 1;
+
+      function showStep(stepNum) {
+        step1.classList.add('hidden');
+        step2.classList.add('hidden');
+        step3.classList.add('hidden');
+        document.getElementById(`step${stepNum}`).classList.remove('hidden');
+        currentStep = stepNum;
+      }
+
+      nextToPaymentBtn.addEventListener('click', () => {
+        const inputs = step1.querySelectorAll('input[required]');
+        let allFilled = true;
+        inputs.forEach(input => {
+          if (!input.value.trim()) {
+            allFilled = false;
+          }
+        });
+        if (allFilled) {
+          showStep(2);
+        } else {
+          alert('Por favor, preencha todos os campos de endereço.');
+        }
+      });
+
+      backToAddressBtn.addEventListener('click', () => showStep(1));
+
+      nextToConfirmBtn.addEventListener('click', () => {
+        const inputs = step2.querySelectorAll('input[required]');
+        let allFilled = true;
+        inputs.forEach(input => {
+          if (!input.value.trim()) {
+            allFilled = false;
+          }
+        });
+        if (allFilled) {
+          renderOrderSummary();
+          showStep(3);
+        } else {
+          alert('Por favor, preencha todos os campos de pagamento.');
+        }
+      });
+
+      backToPaymentBtn.addEventListener('click', () => showStep(2));
+
+      placeOrderBtn.addEventListener('click', async () => {
+        if (!confirmCheckbox.checked) {
+          alert('Por favor, confirme que as informações estão corretas.');
+          return;
+        }
+
+        const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+        const totalAmount = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+        const orderData = {
+          customerName: document.getElementById('fullName').value,
+          customerEmail: document.getElementById('email').value,
+          shippingAddress: document.getElementById('address').value,
+          city: document.getElementById('city').value,
+          state: document.getElementById('state').value,
+          zipCode: document.getElementById('zipCode').value,
+          items: cartItems,
+          totalAmount: totalAmount
+        };
+
+        try {
+          const response = await fetch('/finalizar-pedido', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(orderData)
+          });
+
+          if (response.ok) {
+            localStorage.removeItem('cart');
+            window.location.href = '/pedido-concluido.html';
+          } else {
+            throw new Error('Erro ao finalizar pedido');
+          }
+        } catch (error) {
+          console.error('Erro:', error);
+          alert('Ocorreu um erro ao finalizar o pedido. Por favor, tente novamente.');
+        }
+      });
+
+      async function renderOrderSummary() {
+        const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+        const orderSummary = document.getElementById('orderSummary');
+        const finalTotal = document.getElementById('finalTotal');
+        let total = 0;
+
+        orderSummary.innerHTML = '';
+
+        for (const item of cartItems) {
+          try {
+            const response = await fetch(`/plantas/${item.id}`);
+            if (!response.ok) throw new Error('Erro ao carregar detalhes do produto');
+            const productDetails = await response.json();
+
+            const itemTotal = productDetails.price * item.quantity;
+            total += itemTotal;
+
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'cart-summary-item';
+            itemDiv.innerHTML = `
+              <span>${productDetails.name} x ${item.quantity}</span>
+              <span>R$ ${itemTotal.toFixed(2)}</span>
+            `;
+            orderSummary.appendChild(itemDiv);
+          } catch (error) {
+            console.error('Erro ao carregar produto:', error);
+          }
+        }
+
+        const shipping = total > 0 ? 15.00 : 0.00;
+        const finalAmount = total + shipping;
+
+        const shippingDiv = document.createElement('div');
+        shippingDiv.className = 'cart-summary-item';
+        shippingDiv.innerHTML = `
+          <span>Frete</span>
+          <span>R$ ${shipping.toFixed(2)}</span>
+        `;
+        orderSummary.appendChild(shippingDiv);
+
+        finalTotal.textContent = `Total: R$ ${finalAmount.toFixed(2)}`;
+      }
+    });
+  </script>
+</body>
+</html> 

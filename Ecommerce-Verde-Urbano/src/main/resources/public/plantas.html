@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plantas Nativas | Verde Urbano</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <h1 class="logo">🌿 Verde Urbano</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a href="/index.html">Início</a></li>
+          <li><a href="/catalogo.html">Catálogo de Plantas</a></li>
+          <li><a href="/servicos.html">Telhados Verdes</a></li>
+          <li><a href="/contato.html">Contato</a></li>
+          <li><a href="/cart.html" id="cartLink">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 style="text-align:center; margin: 40px 0;">Catálogo de Plantas Nativas</h2>
+
+    <section class="features">
+      <div class="feature">
+        <img src="/img/TELHADO-VERDE-3D.jpg" alt="Telhado Verde 3D" />
+        <h3>Telhado Verde 3D</h3>
+        <p>Visualização tridimensional de telhado verde para projetos arquitetônicos.</p>
+      </div>
+      <div class="feature">
+        <img src="/img/TELHADO-VERDE-EXTERNO.jpg" alt="Telhado Verde Externo" />
+        <h3>Telhado Verde Externo</h3>
+        <p>Exemplo real de aplicação externa de telhado verde em área urbana.</p>
+      </div>
+      <div class="feature">
+        <img src="/img/TELHADO-VERDE.gif" alt="Animação Telhado Verde" />
+        <h3>Telhado Verde (GIF)</h3>
+        <p>Funcionamento de um telhado verde ecológico.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Verde Urbano. Todos os direitos reservados.</p>
+      <p>🌍 Apoio ao ODS 11 - Cidades e Comunidades Sustentáveis</p>
+    </div>
+  </footer>
+
+  <script src="/js/services.js"></script>
+  <script>
+    function updateCartCount() {
+      const cart = cartService.getCart();
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cartCount').textContent = count;
+    }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
+</body>
+</html> 

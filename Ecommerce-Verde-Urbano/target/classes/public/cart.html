@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meu Carrinho | Verde Urbano</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <h1 class="logo">🌿 Verde Urbano</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a href="/index.html">Início</a></li>
+          <li><a href="/catalogo.html">Catálogo de Plantas</a></li>
+          <li><a href="/servicos.html">Telhados Verdes</a></li>
+          <li><a href="/contato.html">Contato</a></li>
+          <li><a href="/cart.html" id="cartLink">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="catalogo-titulo">🛒 Meu Carrinho</h2>
+    <section class="cart-items-section">
+      <div id="cartItemsContainer"></div>
+      <div class="cart-summary">
+        <h3>Resumo do Pedido</h3>
+        <div class="summary-line">
+          <span>Subtotal:</span>
+          <span id="subtotal">R$ 0,00</span>
+        </div>
+        <div class="summary-line">
+          <span>Frete:</span>
+          <span id="shipping">R$ 0,00</span>
+        </div>
+        <div class="summary-line total">
+          <span>Total:</span>
+          <span id="total">R$ 0,00</span>
+        </div>
+        <button class="btn-primary" id="checkoutButton">Finalizar Compra</button>
+        <button class="btn-secondary" id="clearCartButton">Limpar Carrinho</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Verde Urbano. Todos os direitos reservados.</p>
+      <p>🌍 Apoio ao ODS 11 - Cidades e Comunidades Sustentáveis</p>
+    </div>
+  </footer>
+
+  <script src="/js/services.js"></script>
+  <script>
+    async function loadCartAndRender() {
+      const cart = cartService.getCart();
+      const cartItemsContainer = document.getElementById('cartItemsContainer');
+      let subtotal = 0;
+
+      cartItemsContainer.innerHTML = '';
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p class="empty-cart-message">Seu carrinho está vazio.</p>';
+        document.getElementById('subtotal').textContent = 'R$ 0,00';
+        document.getElementById('shipping').textContent = 'R$ 0,00';
+        document.getElementById('total').textContent = 'R$ 0,00';
+        updateCartCount();
+        return;
+      }
+
+      for (const item of cart) {
+        try {
+          const response = await fetch(`/plantas/${item.id}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const productDetails = await response.json();
+
+          const itemTotal = productDetails.price * item.quantity;
+          subtotal += itemTotal;
+
+          const cartItemDiv = document.createElement('div');
+          cartItemDiv.className = 'cart-item';
+          cartItemDiv.innerHTML = `
+            <img src="${productDetails.imageUrl}" alt="${productDetails.name}" class="cart-item-img" />
+            <div class="cart-item-details">
+              <h4>${productDetails.name}</h4>
+              <p>Preço unitário: R$ ${productDetails.price.toFixed(2)}</p>
+              <p>Quantidade: ${item.quantity}</p>
+              <p>Total: R$ ${itemTotal.toFixed(2)}</p>
+            </div>
+            <button class="btn-remove" data-id="${item.id}">Remover</button>
+          `;
+          cartItemsContainer.appendChild(cartItemDiv);
+        } catch (error) {
+          console.error(`Erro ao carregar detalhes do produto ${item.id}:`, error);
+
+          const errorDiv = document.createElement('div');
+          errorDiv.textContent = `Erro ao carregar item (ID: ${item.id}).`;
+          cartItemsContainer.appendChild(errorDiv);
+        }
+      }
+
+      const shipping = subtotal > 0 ? 15.00 : 0.00; 
+      const total = subtotal + shipping;
+
+      document.getElementById('subtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
+      document.getElementById('shipping').textContent = `R$ ${shipping.toFixed(2)}`;
+      document.getElementById('total').textContent = `R$ ${total.toFixed(2)}`;
+      updateCartCount();
+
+      document.querySelectorAll('.btn-remove').forEach(button => {
+        button.addEventListener('click', function() {
+          const productId = parseInt(this.dataset.id);
+          cartService.removeFromCart(productId);
+          loadCartAndRender(); 
+        });
+      });
+    }
+
+    function updateCartCount() {
+      const cart = cartService.getCart();
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cartCount').textContent = count;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCartAndRender();
+
+      document.getElementById('checkoutButton').addEventListener('click', function() {
+        if (cartService.getCart().length > 0) {
+          window.location.href = '/checkout.html';
+        } else {
+          alert('Seu carrinho está vazio. Adicione produtos para finalizar a compra.');
+        }
+      });
+
+      document.getElementById('clearCartButton').addEventListener('click', function() {
+        cartService.clearCart();
+        loadCartAndRender();
+        alert('Carrinho limpo!');
+      });
+
+      document.getElementById('cartLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = '/cart.html';
+      });
+    });
+  </script>
+</body>
+</html> 

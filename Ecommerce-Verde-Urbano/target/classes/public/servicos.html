@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telhados Verdes | Verde Urbano</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <h1 class="logo">🌿 Verde Urbano</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a href="/index.html">Início</a></li>
+          <li><a href="/catalogo.html">Catálogo de Plantas</a></li>
+          <li><a href="/servicos.html">Telhados Verdes</a></li>
+          <li><a href="/contato.html">Contato</a></li>
+          <li><a href="/cart.html" id="cartLink">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h2 class="catalogo-titulo">Serviços de Telhados Verdes</h2>
+    <section class="features">
+      <div class="feature">
+        <img src="/img/TELHADO-VERDE-3D.jpg" alt="Consultoria e Projeto 3D" />
+        <h3>Consultoria e Projeto 3D</h3>
+        <p>Desenvolvemos projetos personalizados para seu telhado verde, com visualizações 3D realistas e planejamento detalhado. Inclui análise de viabilidade e sugestão de espécies.</p>
+      </div>
+      <div class="feature">
+        <img src="/img/TELHADO-VERDE-EXTERNO.jpg" alt="Instalação Completa por m²" />
+        <h3>Instalação Completa por m²</h3>
+        <p>Nossa equipe especializada realiza a instalação completa do seu telhado verde, garantindo durabilidade e eficiência. Inclui camadas de drenagem, substrato e vegetação selecionada.</p>
+      </div>
+      <div class="feature">
+        <img src="/img/TELHADO-VERDE.gif" alt="Guia Essencial e Workshop Online" />
+        <h3>Guia Essencial e Workshop Online</h3>
+        <p>Aprenda tudo sobre a funcionalidade, benefícios e manutenção de telhados verdes através do nosso guia detalhado e acesso a um workshop exclusivo. Ideal para quem busca conhecimento aprofundado.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Verde Urbano. Todos os direitos reservados.</p>
+      <p>🌍 Apoio ao ODS 11 - Cidades e Comunidades Sustentáveis</p>
+    </div>
+  </footer>
+
+  <script src="/js/services.js"></script>
+  <script>
+    function updateCartCount() {
+      const cart = cartService.getCart();
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cartCount').textContent = count;
+    }
+
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
+</body>
+</html> 

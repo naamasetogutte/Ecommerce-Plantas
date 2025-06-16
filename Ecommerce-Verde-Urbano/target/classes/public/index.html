@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>E-commerce Verde</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <h1 class="logo">🌿 Verde Urbano</h1>
+      <nav class="navbar">
+        <ul>
+          <li><a href="/index.html">Início</a></li>
+          <li><a href="/catalogo.html">Catálogo de Plantas</a></li>
+          <li><a href="/servicos.html">Telhados Verdes</a></li>
+          <li><a href="/contato.html">Contato</a></li>
+          <li><a href="/cart.html" id="cartLink">🛒 Carrinho (<span id="cartCount">0</span>)</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="overlay"></div>
+    <div class="container hero-content">
+      <h2>Transforme sua cidade com natureza</h2>
+      <p>Descubra plantas nativas e soluções de telhados verdes para um futuro mais sustentável e bonito.</p>
+      <a href="/catalogo.html" class="btn-primary">Ver Catálogo</a>
+    </div>
+  </section>
+
+  <section class="features container">
+    <div class="feature">
+      <img src="/img/TELHADO-VERDE-3D.jpg" alt="Plantas Nativas em jardim urbano" />
+      <h3>Plantas Nativas</h3>
+      <p>Adaptadas ao clima, exigem menos recursos e ajudam a restaurar a biodiversidade local.</p>
+    </div>
+    <div class="feature">
+      <img src="/img/TelhadoVerde.jpg" alt="Telhado verde em prédio moderno" />
+      <h3>Telhados Verdes</h3>
+      <p>Reduza o calor urbano, melhore o isolamento térmico e promova sustentabilidade.</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Verde Urbano. Todos os direitos reservados.</p>
+      <p>🌍 Apoio ao ODS 11 - Cidades e Comunidades Sustentáveis</p>
+    </div>
+  </footer>
+
+  <script src="/js/services.js"></script>
+  <script>
+    function updateCartCount() {
+      const cart = cartService.getCart();
+      const count = cart.reduce((total, item) => total + item.quantity, 0);
+      document.getElementById('cartCount').textContent = count;
+    }
+    document.addEventListener('DOMContentLoaded', updateCartCount);
+  </script>
+</body>
+</html>

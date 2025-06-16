@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrinho - Verde Urbano</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">Verde Urbano</a>
+                <button class="menu-button">☰</button>
+                <nav class="navbar">
+                    <ul>
+                        <li><a href="index.html">Início</a></li>
+                        <li><a href="catalogo.html">Catálogo</a></li>
+                        <li><a href="contato.html">Contato</a></li>
+                        <li><a href="carrinho.html">Carrinho (<span id="cart-count">0</span>)</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="cart">
+            <h1>Seu Carrinho</h1>
+            <div class="cart-content">
+                <div class="cart-items" id="cart-items">
+                </div>
+                <div class="cart-summary">
+                    <h2>Resumo do Pedido</h2>
+                    <div class="summary-item">
+                        <span>Subtotal</span>
+                        <span id="subtotal">R$ 0,00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Frete</span>
+                        <span id="frete">R$ 0,00</span>
+                    </div>
+                    <div class="summary-item total">
+                        <span>Total</span>
+                        <span id="total">R$ 0,00</span>
+                    </div>
+                    <button class="btn-primary" id="checkout-button">Finalizar Compra</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Verde Urbano. Todos os direitos reservados.</p>
+            <p>Apoio ao ODS 11: Cidades e Comunidades Sustentáveis</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        function loadCartItems() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const container = document.getElementById('cart-items');
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="empty-cart">Seu carrinho está vazio</p>';
+                updateSummary(0);
+                return;
+            }
+            
+            Promise.all(cart.map(id => fetch(`/plantas/${id}`).then(res => res.json())))
+                .then(products => {
+                    displayCartItems(products);
+                    updateSummary(products);
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar produtos:', error);
+                    showNotification('Erro ao carregar produtos do carrinho');
+                });
+        }
+
+        function displayCartItems(products) {
+            const container = document.getElementById('cart-items');
+            container.innerHTML = products.map(product => `
+                <div class="cart-item" data-id="${product.id}">
+                    <img src="${product.imagem}" alt="${product.nome}">
+                    <div class="item-details">
+                        <h3>${product.nome}</h3>
+                        <p>${product.descricao}</p>
+                        <p class="price">R$ ${product.preco.toFixed(2)}</p>
+                    </div>
+                    <button class="remove-item" onclick="removeFromCart(${product.id})">
+                        Remover
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function updateSummary(products) {
+            const subtotal = Array.isArray(products) 
+                ? products.reduce((sum, product) => sum + product.preco, 0)
+                : 0;
+            const frete = subtotal > 0 ? 15 : 0;
+            const total = subtotal + frete;
+
+            document.getElementById('subtotal').textContent = `R$ ${subtotal.toFixed(2)}`;
+            document.getElementById('frete').textContent = `R$ ${frete.toFixed(2)}`;
+            document.getElementById('total').textContent = `R$ ${total.toFixed(2)}`;
+        }
+
+        function removeFromCart(productId) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart = cart.filter(id => id !== productId);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            localStorage.setItem('cartCount', cart.length);
+            updateCartCount();
+            loadCartItems();
+            showNotification('Item removido do carrinho');
+        }
+
+        document.getElementById('checkout-button').addEventListener('click', () => {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                showNotification('Adicione itens ao carrinho antes de finalizar a compra');
+                return;
+            }
+            
+            showNotification('Compra finalizada com sucesso!');
+            localStorage.removeItem('cart');
+            localStorage.setItem('cartCount', '0');
+            updateCartCount();
+            loadCartItems();
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCartItems();
+        });
+    </script>
+</body>
+</html> 
