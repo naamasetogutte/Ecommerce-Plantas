@@ -12,32 +12,26 @@ import static spark.Spark.staticFiles;
 
 public class Main {
     public static void main(String[] args) {
-        // Configurar porta (opcional, padrão é 4567)
+
         port(4567);
-        
-        // Configurar diretório de arquivos estáticos
+
         staticFiles.location("/public");
-        
-        // Configuração do Gson para JSON
+
         Gson gson = new Gson();
         
-        // Log para debug
         System.out.println("Iniciando servidor Spark Java na porta 4567...");
         System.out.println("Diretório de arquivos estáticos: /public");
 
-        // Rota principal
         get("/", (req, res) -> {
             res.redirect("/index.html");
             return null;
         });
         
-        // Rota para obter uma planta/produto específico (para o carrinho)
         get("/plantas/:id", (req, res) -> {
             res.type("application/json");
             int id = Integer.parseInt(req.params(":id"));
             Map<String, Object> produto = new HashMap<>();
 
-            // Dados de exemplo baseados no seu catalogo.html
             switch (id) {
                 case 1:
                     produto = createProduto(1, "Capim-dourado", "Resistente à seca e ideal para jardins sustentáveis.", 25.00, "/img/CapimDourado.jpg");
@@ -64,14 +58,11 @@ public class Main {
             return gson.toJson(produto);
         });
 
-        // Rota POST para /cadastro (formulário de contato)
         post("/cadastro", (req, res) -> {
             res.type("application/json");
             Map<String, String> response = new HashMap<>();
             
             try {
-                // Aqui você pode implementar a lógica para processar o formulário
-                // Por enquanto, apenas retornaremos uma resposta de sucesso
                 response.put("status", "success");
                 response.put("message", "Mensagem enviada com sucesso!");
                 return gson.toJson(response);
@@ -83,17 +74,13 @@ public class Main {
             }
         });
 
-        // Nova rota POST para /finalizar-pedido
         post("/finalizar-pedido", (req, res) -> {
             res.type("application/json");
             Map<String, String> response = new HashMap<>();
             try {
                 String requestBody = req.body();
-                System.out.println("Pedido recebido: " + requestBody); // Logar o corpo da requisição
+                System.out.println("Pedido recebido: " + requestBody);
                 
-                // Implemente a lógica para processar e salvar o pedido aqui
-                // Por exemplo: salvar no banco de dados, enviar email, etc.
-
                 response.put("status", "success");
                 response.put("message", "Pedido finalizado com sucesso!");
                 res.status(200);
@@ -102,17 +89,15 @@ public class Main {
                 res.status(500);
                 response.put("status", "error");
                 response.put("message", "Erro ao finalizar o pedido: " + e.getMessage());
-                System.err.println("Erro ao processar pedido: " + e.getMessage()); // Logar o erro
+                System.err.println("Erro ao processar pedido: " + e.getMessage());
                 return gson.toJson(response);
             }
         });
 
-        // Log de inicialização
         System.out.println("Servidor Spark Java iniciado com sucesso!");
         System.out.println("Acesse: http://localhost:4567");
     }
     
-    // Método auxiliar para criar dados de exemplo de produtos
     private static Map<String, Object> createProduto(int id, String nome, String descricao, double preco, String imagem) {
         Map<String, Object> produto = new HashMap<>();
         produto.put("id", id);
